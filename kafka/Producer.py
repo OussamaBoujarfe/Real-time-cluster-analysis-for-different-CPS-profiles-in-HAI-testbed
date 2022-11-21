@@ -8,7 +8,7 @@ import time
 if __name__ == "__main__":
     BOOTSTRAP_SERVER = 'kafka:9092'
     TOPIC = 'HAI'
-    DATA_PATH = './data/test.csv'
+    DATA_PATH = './data/All1.csv'
     # Load the dataa
     print('Loading data')
     data = csv.DictReader(open(DATA_PATH)) 

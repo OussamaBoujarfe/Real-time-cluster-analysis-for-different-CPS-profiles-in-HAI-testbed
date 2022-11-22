@@ -11,19 +11,21 @@ if __name__ == "__main__":
     DATA_PATH = './data/All1.csv'
     # Load the dataa
     print('Loading data')
-    data = csv.DictReader(open(DATA_PATH)) 
+    data = csv.DictReader(open(DATA_PATH),delimiter=';') 
     # Initialize producer
     producer = KafkaProducer(bootstrap_servers = BOOTSTRAP_SERVER)
     # Time interval
     startTime = time.time()
-    waitSeconds = .1
+    waitSeconds = .6
 
-    while True:
-        for row in data:
-            # Convert to a JSON format
-            payload = json.dumps(row)
-            # Produce
-            producer.send(TOPIC, value=payload.encode('utf-8'))
-            # print(payload)
-            # Wait a number of second until next message
-            time.sleep(waitSeconds - ((time.time() - startTime) % waitSeconds))
+    
+    for row in data:
+        #print(row)
+        # Convert to a JSON format
+        payload = json.dumps(row)
+        # Produce
+        producer.send(TOPIC, value=payload.encode('utf-8'))
+        #print(payload)
+        # Wait a number of second until next message
+        time.sleep(waitSeconds - ((time.time() - startTime) % waitSeconds))
+    print("Emptied.")

@@ -8,9 +8,12 @@ import pickle
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
+
+from influx_writer import InfluxDBWriter
+
 # Importing the datase
 def load_data(path):
-  return pd.read_csv(path, header = 1)
+  return pd.read_csv(path,delimiter=';')
 
 # Rewrite column names
 def rewrite_cols(data):
@@ -34,10 +37,10 @@ def EDA(data):
   print(data.duplicated().sum())
   ## Values to datetime
   print(f'[...] Converting string time to timestamp')
-  data['Time'] = [datetime.datetime.strptime(t, "%d/%m/%Y %H:%M:%S.%f %p") for t in data['Time']] 
+  data['tcdime'] = [datetime.datetime.strptime(t, "%d/%m/%Y %H:%M:%S.%f %p") for t in data['time']] 
   ## Distribution by days
   print(f'[>] Distribution by days: ')
-  day = data['Time'].dt.day
+  day = data['time'].dt.day
   cnt_srs = day.value_counts()
   plt.figure(figsize=(12,6))
   sns.barplot(cnt_srs.index, cnt_srs.values, alpha=0.8, color=sns.color_palette()[3])
@@ -47,7 +50,7 @@ def EDA(data):
   plt.show()
   ## Distribution by hours
   print(f'[>] Distribution by hours: ')
-  hours = data['Time'].dt.hour
+  hours = data['time'].dt.hour
   cnt_srs = hours.value_counts()
   plt.figure(figsize=(12,6))
   sns.barplot(cnt_srs.index, cnt_srs.values, alpha=0.8, color=sns.color_palette()[3])
@@ -62,8 +65,8 @@ def EDA(data):
     plt.figure(figsize = (15, 10))
     for i, col in enumerate(cols[j:j+3]):
       plt.subplot(2, 3, i + 1)    
-      plt.scatter(data['Time'], data[col], s=10)
-      plt.xlabel('Time')
+      plt.scatter(data['time'], data[col], s=10)
+      plt.xlabel('time')
       plt.title(str(col))
       plt.xticks(rotation=40)
       j += 1
@@ -88,14 +91,46 @@ def preprocess(data):
 
   return data, cat, cont
 
+def preprocess_2(data):
+  permitted_cols=set(data.columns).difference({'time','attack','attack_P1','attack_P2','attack_P3'})
+  for col in ['time','attack','attack_P1','attack_P2','attack_P3']:
+    print(f"> Dropping {col}")
+    data = data.drop(col, axis=1)
+
+  CATEG_RANGE = 3
+  cat, cont = [], []
+
+  for col in data.columns:
+    if len(data[col].value_counts()) <= CATEG_RANGE:
+      cat.append(col)
+    else:
+      cont.append(col)
+
+  return data, cat, cont
+""" 
+> Dropping P1_PCV02D
+> Dropping P2_Auto
+> Dropping P2_Emgy
+> Dropping P2_On
+> Dropping P2_SD01
+> Dropping P2_TripEx
+> Dropping P3_LH
+> Dropping P3_LL
+> Dropping P4_HT_PS
+> Dropping attack_P2
+> Dropping attack_P3 
+"""
+
+
+
 # Standardize values
 def Standardize(data):
   sc = StandardScaler()
-  sc.fit(data.iloc[:, data.columns != 'Time'])
-  data_norm = pd.DataFrame( sc.transform(data.iloc[:, data.columns != 'Time']) )
+  sc.fit(data.iloc[:, 1:len(data.columns)+1])
+  data_norm = pd.DataFrame( sc.transform(data.iloc[:, 1:len(data.columns)+1]) )
   data_norm_c = data_norm.copy()
-  data_norm.columns = data.iloc[:, data.columns != 'Time'].columns
-  data_norm.insert(0, 'Time', data['Time'])
+  data_norm.columns = data.iloc[:, 1:len(data.columns)+1].columns
+  data_norm.insert(0, 'time', data.iloc[:,0])
   # It is important to use binary access
   with open('./transformers/scaler.pickle', 'wb') as f:
     pickle.dump(sc, f)
@@ -106,18 +141,51 @@ def apply_pca(data, cont):
   data_scaled = Standardize(data[cont])
   data_ = data_scaled
   pca = PCA(n_components = 0.95)
-  pca.fit(data_.iloc[:, data_.columns != 'Time'])
-  reduced = pca.transform(data_.iloc[:, data_.columns != 'Time'])
+  pca.fit(data_.iloc[:, data.columns!='time'])
+  reduced = pca.transform(data_.iloc[:, 1:len(data.columns)+1])
   principal_components = pd.DataFrame(data = reduced, columns=[f"P{col + 1}" for col in range(reduced.shape[1])])
   with open('./transformers/pca.pickle', 'wb') as f:
       pickle.dump(pca, f)
   return principal_components
 
+def Standardize_2(data):
+  sc = StandardScaler()
+  permitted_cols=set(data.columns).difference({'time','attack','attack_P1','attack_P2','attack_P3'})
+  permitted_cols= ['P1_B2004', 'P1_B2016', 'P1_B3004', 'P1_B3005', 'P1_B4002', 'P1_B4005', 'P1_B400B', 'P1_B4022', 'P1_FCV01D', 'P1_FCV01Z', 'P1_FCV02D', 'P1_FCV02Z', 'P1_FCV03D', 'P1_FCV03Z', 'P1_FT01', 'P1_FT01Z', 
+'P1_FT02', 'P1_FT02Z', 'P1_FT03', 'P1_FT03Z', 'P1_LCV01D', 'P1_LCV01Z', 'P1_LIT01', 'P1_PCV01D', 'P1_PCV01Z', 'P1_PCV02Z', 'P1_PIT01', 'P1_PIT02', 'P1_TIT01', 'P1_TIT02', 'P2_24Vdc', 'P2_SIT01', 'P2_VT01e', 'P2_VXT02', 'P2_VXT03', 'P2_VYT02', 'P2_VYT03', 'P3_LCP01D', 'P3_LCV01D', 'P3_LT01', 'P4_HT_FD', 'P4_HT_LD', 'P4_HT_PO', 'P4_LD', 'P4_ST_FD', 'P4_ST_LD', 'P4_ST_PO', 'P4_ST_PS', 'P4_ST_PT01', 'P4_ST_TT01']
+  sc.fit(data[permitted_cols])
+  print(len(data.columns), len(permitted_cols))
+  data_norm = pd.DataFrame( sc.transform(data[permitted_cols]))
+  data_norm_c = data_norm.copy()
+  data_norm.columns = data[permitted_cols].columns
+  #data_norm.insert(0, 'time', data['time'])
+
+  with open('./transformers/scaler_2.pickle', 'wb') as f:
+    pickle.dump(sc, f)
+  return data_norm
+
+def apply_pca_2(data, cont):
+  data_scaled = Standardize_2(data[cont])
+  data_ = data_scaled
+  permitted_cols=set(data.columns).difference({'time','attack','attack_P1','attack_P2','attack_P3'})
+  permitted_cols= ['P1_B2004', 'P1_B2016', 'P1_B3004', 'P1_B3005', 'P1_B4002', 'P1_B4005', 'P1_B400B', 'P1_B4022', 'P1_FCV01D', 'P1_FCV01Z', 'P1_FCV02D', 'P1_FCV02Z', 'P1_FCV03D', 'P1_FCV03Z', 'P1_FT01', 'P1_FT01Z', 
+'P1_FT02', 'P1_FT02Z', 'P1_FT03', 'P1_FT03Z', 'P1_LCV01D', 'P1_LCV01Z', 'P1_LIT01', 'P1_PCV01D', 'P1_PCV01Z', 'P1_PCV02Z', 'P1_PIT01', 'P1_PIT02', 'P1_TIT01', 'P1_TIT02', 'P2_24Vdc', 'P2_SIT01', 'P2_VT01e', 'P2_VXT02', 'P2_VXT03', 'P2_VYT02', 'P2_VYT03', 'P3_LCP01D', 'P3_LCV01D', 'P3_LT01', 'P4_HT_FD', 'P4_HT_LD', 'P4_HT_PO', 'P4_LD', 'P4_ST_FD', 'P4_ST_LD', 'P4_ST_PO', 'P4_ST_PS', 'P4_ST_PT01', 'P4_ST_TT01']
+  
+  pca = PCA(n_components = 0.95)
+  pca.fit(data[permitted_cols])
+  reduced = pca.transform(data[permitted_cols])
+  principal_components = pd.DataFrame(data = reduced, columns=[f"P{col + 1}" for col in range(reduced.shape[1])])
+  with open('./transformers/pca_2.pickle', 'wb') as f:
+      pickle.dump(pca, f)
+  return principal_components  
+
 # Merge extracted features with scaled data
 def append_cols(A, B, cols):
   for col in cat:
     A[col] = B[col]
-  A.insert(0, 'Time', B['Time'])
+  #print(A.columns)
+  #print(B.columns)
+  A.insert(0, 'time', B['time'])
   return A
 
 def split_save(data):
@@ -128,22 +196,25 @@ def split_save(data):
   print(len(train), len(test))
 
   # Split the data into two sets and save locally
-  train.to_csv(f"./data/All1.csv", sep = ',', encoding = 'utf-8', index = False)
-  test.to_csv(f"./data/test1.csv", sep = ',', encoding = 'utf-8', index = False)
+  train.to_csv(f"./data/train_1.csv", sep = ',', encoding = 'utf-8', index = False)
+  test.to_csv(f"./data/test_1.csv", sep = ',', encoding = 'utf-8', index = False)
 
 if __name__=="__main__":
   # Load data
-  LOCAL_PATH = './data/All1.csv'
+  LOCAL_PATH = './data/train_0.csv'
   data = load_data(LOCAL_PATH)
   # Rewrite cols
-  data = rewrite_cols(data)
+  #data = rewrite_cols(data)
   # EDA
   # EDA(data)
   # Preprocess
-  data, cat, cont = preprocess(data)
+  data, cat, cont = preprocess_2(data)
+  print(data.columns)
+  print(cat)
+  print(cont)
   # PCA
-  data_processed = apply_pca(data, cont)
+  data_processed = apply_pca_2(data, cont)
   # Merge
-  R = append_cols(data_processed, data, cat)
+  #R = append_cols(data_processed, data, cat)
   # Split and save the data
-  split_save(R)
+  #split_save(R)

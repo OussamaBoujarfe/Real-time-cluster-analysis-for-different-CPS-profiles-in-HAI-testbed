@@ -1,3 +1,11 @@
 
 *.csv
 *.csv
+spark/.local/
+spark/.ivy2/
+spark/.local/
+spark/.ipython/
+spark/.ipynb_checkpoints/
+spark/.jupyter/
+spark/.cache/
+spark/__pycache__/

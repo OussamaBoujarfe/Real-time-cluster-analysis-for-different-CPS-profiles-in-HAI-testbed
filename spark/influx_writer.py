@@ -8,7 +8,7 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 
 URL = "http://influxdb:8086"
-INFLUX_TOKEN="MAfXwWBJhFCmytkqubzYVlqhyTPfCllMQTxR7lG6kyTBRUSOq7NKnsg43ibWxU-vSL_GlqUSgrL0OlBjqtDLuQ=="
+INFLUX_TOKEN="fc8KhhvXxfFxJLX52FCs8hRThYWWf7a8ySMqUGI2BdsVS1Fz39fIXvwVrf2TWK3MsTRKyuKww3NXyAaEa3pCaQ=="
 ORG = "primary"
 BUCKET = "hai"
 #INFLUX_TOKEN =  'Vp7vp5ddGYs9vh4A4NVM6N7MmJvNGN79tODBCCPTxx_DAe7Xty8Vmi7kh-unIZ4QKbd3o7r2bUNTcj0OaSeyWg=='

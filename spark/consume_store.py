@@ -100,7 +100,8 @@ if __name__=="__main__":
     
     writer = InfluxDBWriter()
     
-    
+    #load the model as a pickle 
+    pickled_model = pickle.load(open('./clusteringmodel/model.pkl', 'rb'))
     def func(batch_df, batch_id):
         #len(batch_df.collect())
         # Normalize
@@ -114,11 +115,14 @@ if __name__=="__main__":
             reduced = pca.transform( data_norm )
             processed =  pd.DataFrame(data = reduced, columns=[f"P{col + 1}" for col in range(reduced.shape[1])])
 
-            #print(processed.shape)
-    
+            #print(processed.shape)6
+             #apply transform on processed and apply partial fit on processed  
+            pickled_model.partial_fit(reduced)
+            tran=pickled_model.predict(processed) 
             df_concat = pd.concat([df, processed], axis=1)
-
-            #print(df_concat)
+            #concat transformed results on df concat 
+            
+            print(tran)
             writer.saveToInfluxDB(df_concat)
         
         else:

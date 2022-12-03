@@ -3,3 +3,4 @@ pyspark
 numpy
 pandas
 influxdb-client
+river

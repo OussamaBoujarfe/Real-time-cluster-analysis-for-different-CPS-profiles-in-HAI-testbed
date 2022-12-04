@@ -124,8 +124,10 @@ if __name__=="__main__":
             tran=BirchModel.predict(reduced) 
             df_concat = pd.concat([df, processed], axis=1)
             dftran = pd.DataFrame(tran, columns = ['birch'])
+            df2 = dftran.groupby(['birch'])['birch'].count()
+            print(df2)
             #convert tran to df
-            df_concat = pd.concat([df, dftran], axis=1)
+            df_concat = pd.concat([df_concat, dftran], axis=1)
             writer.saveToInfluxDB(df_concat)
         
         else:

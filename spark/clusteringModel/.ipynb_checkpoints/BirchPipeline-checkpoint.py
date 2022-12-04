@@ -42,5 +42,4 @@ model.fit(reduced)
 
 
 pickle.dump(model, open('BirchModel.pkl', 'wb'))
-#train data in procedssed where processed has columns p1 and p2
 #pickle the model 

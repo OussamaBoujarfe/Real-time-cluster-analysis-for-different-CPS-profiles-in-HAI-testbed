@@ -22,7 +22,8 @@ class InfluxDBWriter:
         self.bucket = BUCKET
         self.client = InfluxDBClient(url=self.url, token=self.token, org=self.org)
         self.write_api = self.client.write_api()
-    
+        self.delete_api = self.client.delete_api()
+
 
     def saveToInfluxDB(self, df):
         try:
@@ -33,4 +34,8 @@ class InfluxDBWriter:
         except Exception as ex:
             print(f"[x] Error {str(ex)}")
 
-        
+    def flushInfluxDB(self):
+        start = "1970-01-01T00:00:00Z"
+        stop = "2022-12-04T12:00:00Z"
+        self.delete_api.delete(start, stop, '_measurement="attack"', bucket=self.bucket, org=self.org)
+        print("Old data flushed")

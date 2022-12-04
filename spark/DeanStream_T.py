@@ -14,7 +14,8 @@ from sklearn.decomposition import PCA
 
 from sklearn.metrics import calinski_harabasz_score, davies_bouldin_score, silhouette_score
 
-
+import warnings
+warnings.filterwarnings('ignore')
 
 
 pca = pickle.load(open('./transformers/pca_2.pickle', 'rb'))
@@ -23,7 +24,7 @@ cont=['P1_B2004', 'P1_B2016', 'P1_B3004', 'P1_B3005', 'P1_B4002', 'P1_B4005', 'P
 'P1_FT02', 'P1_FT02Z', 'P1_FT03', 'P1_FT03Z', 'P1_LCV01D', 'P1_LCV01Z', 'P1_LIT01', 'P1_PCV01D', 'P1_PCV01Z', 'P1_PCV02Z', 'P1_PIT01', 'P1_PIT02', 'P1_TIT01', 'P1_TIT02', 'P2_24Vdc', 'P2_SIT01', 'P2_VT01e', 'P2_VXT02', 'P2_VXT03', 'P2_VYT02', 'P2_VYT03', 'P3_LCP01D', 'P3_LCV01D', 'P3_LT01', 'P4_HT_FD', 'P4_HT_LD', 'P4_HT_PO', 'P4_LD', 'P4_ST_FD', 'P4_ST_LD', 'P4_ST_PO', 'P4_ST_PS', 'P4_ST_PT01', 'P4_ST_TT01']    
 
 
-LOCAL_PATH = './data/train1.csv'
+LOCAL_PATH = './data/train2.csv'
 df = pd.read_csv(LOCAL_PATH,delimiter=';')
 pd_df = df[cont]
 
@@ -38,18 +39,19 @@ reduced = pca.transform( data_norm )
 principal_components =  pd.DataFrame(data = reduced, columns=[f"P{col + 1}" for col in range(reduced.shape[1])])
 
 
-from sklearn.cluster import KMeans
-cs = []
-for i in range(1, 11):
-    kmeans = KMeans(n_clusters = i, init = 'k-means++', max_iter = 300, n_init = 10, random_state = 0)
-    kmeans.fit(reduced)
-    cs.append(kmeans.inertia_)
-plt.plot(range(1, 11), cs)
-plt.title('The Elbow Method')
-plt.xlabel('Number of clusters')
-plt.ylabel('WCSS')
-plt.show()
 
+denstream = cluster.DenStream(decaying_factor=0.01,
+                               beta=0.5,
+                               mu=2.5,
+                               epsilon=0.5,
+                               n_samples_init=10)
+
+l = []                               
+for x, _ in stream.iter_pandas(principal_components ):
+    denstream = denstream.learn_one(x)         
+    
+    l.append(denstream.predict_one(x))
+print(pd.DataFrame(l).value_counts())                      
 
 """
 streamkmeans_1 = cluster.STREAMKMeans(chunk_size=390, n_clusters=4, halflife=0.5, sigma=2.5, seed=0)

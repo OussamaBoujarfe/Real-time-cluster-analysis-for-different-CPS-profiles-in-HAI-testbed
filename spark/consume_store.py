@@ -16,12 +16,16 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 import pickle
+
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+
+from river import stream
 
 import warnings
 warnings.filterwarnings('ignore')
 
+from STREAMKmeans import STREAMKmeans
 
 
 if __name__=="__main__":
@@ -100,6 +104,9 @@ if __name__=="__main__":
     
     writer = InfluxDBWriter()
     
+    SKmeans = STREAMKmeans() 
+    
+    
     
     def func(batch_df, batch_id):
         #len(batch_df.collect())
@@ -112,13 +119,15 @@ if __name__=="__main__":
             data_norm = pd.DataFrame( sc.transform(pd_df) , columns=cont)
         # PCA
             reduced = pca.transform( data_norm )
-            processed =  pd.DataFrame(data = reduced, columns=[f"P{col + 1}" for col in range(reduced.shape[1])])
-
-            #print(processed.shape)
-    
+            processed =  pd.DataFrame(data = reduced, columns=[f"P{col + 1}" for col in range(reduced.shape[1])])    
             df_concat = pd.concat([df, processed], axis=1)
 
-            #print(df_concat)
+            
+            
+            streamkmeans_labels = SKmeans.model(processed)
+            df_concat = pd.concat([df_concat, streamkmeans_labels], axis=1)
+
+            
             writer.saveToInfluxDB(df_concat)
         
         else:

@@ -9,7 +9,7 @@ import datetime
 if __name__ == "__main__":
     BOOTSTRAP_SERVER = 'kafka:9092'
     TOPIC = 'HAI'
-    DATA_PATH = './data/All1.csv'
+    DATA_PATH = './data/test2.csv'
     # Load the dataa
     print('Loading data')
     data = csv.DictReader(open(DATA_PATH),delimiter=';') 
@@ -34,7 +34,8 @@ if __name__ == "__main__":
         # Convert to a JSON format
         current_time = time.localtime()
         old_time = datetime.datetime.fromisoformat(row['time'])
-        new_time = old_time + datetime.timedelta(seconds=101271679)
+        #new_time = old_time + datetime.timedelta(seconds=101271679)
+        new_time = old_time + datetime.timedelta(seconds=97209960)
         row['time'] =   new_time.isoformat(' ')
         payload = json.dumps(row)
         # Produce

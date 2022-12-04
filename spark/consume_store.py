@@ -25,7 +25,7 @@ from river import stream
 import warnings
 warnings.filterwarnings('ignore')
 
-from STREAMKmeans import STREAMKmeans
+from streamKmeans import STREAMKmeans
 
 
 if __name__=="__main__":

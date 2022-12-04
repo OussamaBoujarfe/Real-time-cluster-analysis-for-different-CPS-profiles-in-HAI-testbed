@@ -14,7 +14,8 @@ from sklearn.decomposition import PCA
 
 from sklearn.metrics import calinski_harabasz_score, davies_bouldin_score, silhouette_score
 
-
+import warnings
+warnings.filterwarnings('ignore')
 
 
 pca = pickle.load(open('./transformers/pca_2.pickle', 'rb'))

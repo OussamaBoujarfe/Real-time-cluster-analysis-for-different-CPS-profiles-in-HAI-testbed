@@ -4,3 +4,5 @@ numpy
 pandas
 influxdb-client
 river
+combo
+pysad

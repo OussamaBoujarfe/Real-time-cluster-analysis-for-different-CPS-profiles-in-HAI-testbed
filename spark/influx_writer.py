@@ -12,7 +12,7 @@ INFLUX_TOKEN = "EAgglX4LdeS050CfN-co5RH64szpRLfIWLsJCbnZXV4IfHDo335Dt7p5_U7hVsMv
 ORG = "primary"
 BUCKET = "hai"
 #INFLUX_TOKEN =  'Vp7vp5ddGYs9vh4A4NVM6N7MmJvNGN79tODBCCPTxx_DAe7Xty8Vmi7kh-unIZ4QKbd3o7r2bUNTcj0OaSeyWg=='
-
+#_vueR6p82n7khVlskwa91RB_mhU5Ftte71K0M0-Ifm6gZjheEukfAIbHJXKl_brh5YvP3Sx1sjtCva6Oq2Z7dA==
 
 class InfluxDBWriter:
     def __init__(self):

@@ -26,7 +26,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 from STREAMKmeans import STREAMKmeans
-
+from iForestASD import iForestASD
 
 if __name__=="__main__":
     os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0 pyspark-shell'
@@ -105,7 +105,7 @@ if __name__=="__main__":
     writer = InfluxDBWriter()
     
     SKmeans = STREAMKmeans() 
-    
+    iForest = iForestASD()
     
     
     def func(batch_df, batch_id):
@@ -115,7 +115,7 @@ if __name__=="__main__":
         
             df = batch_df.toPandas()
             pd_df = df[cont]
-
+            print(df.dtypes)
             data_norm = pd.DataFrame( sc.transform(pd_df) , columns=cont)
         # PCA
             reduced = pca.transform( data_norm )
@@ -126,7 +126,9 @@ if __name__=="__main__":
             
             streamkmeans_labels = SKmeans.model(processed)
             df_concat = pd.concat([df_concat, streamkmeans_labels], axis=1)
-
+            
+            iForest_labels = iForest.model(processed)
+            df_concat = pd.concat([df_concat, iForest_labels], axis=1)
             
             writer.saveToInfluxDB(df_concat)
         

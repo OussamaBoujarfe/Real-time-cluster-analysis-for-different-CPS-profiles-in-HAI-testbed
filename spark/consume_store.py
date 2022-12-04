@@ -99,7 +99,7 @@ if __name__=="__main__":
     
     
     writer = InfluxDBWriter()
-    
+    writer.flushInfluxDB()
     #load the model as a pickle 
     BirchModel = pickle.load(open('./clusteringmodel/BirchModel.pkl', 'rb'))
     
@@ -109,6 +109,8 @@ if __name__=="__main__":
         if batch_df.count() > 0:
         
             df = batch_df.toPandas()
+            for col in cont:
+                df[col] = df[col].astype(float)
             pd_df = df[cont]
 
             data_norm = pd.DataFrame( sc.transform(pd_df) , columns=cont)
@@ -116,19 +118,10 @@ if __name__=="__main__":
             reduced = pca.transform( data_norm )
             processed =  pd.DataFrame(data = reduced, columns=[f"P{col + 1}" for col in range(reduced.shape[1])])
 
-            #print(processed.shape)6
+            
             #apply transform on processed and apply partial fit on processed  
             BirchModel.partial_fit(reduced)
             tran=BirchModel.predict(reduced) 
-            
-            
-            #concat transformed results on df concat 
-            centroids = BirchModel.subcluster_centers_
-            labels = BirchModel.labels_
-            n_clusters = np.unique(labels).size
-            print("n_clusters : %d" % n_clusters)
-            print(centroids)
-            
             df_concat = pd.concat([df, processed], axis=1)
             dftran = pd.DataFrame(tran, columns = ['birch'])
             #convert tran to df

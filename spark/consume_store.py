@@ -140,8 +140,8 @@ if __name__=="__main__":
             kmeans_labels = Kmeans.model(processed)
             df_concat = pd.concat([df_concat, kmeans_labels], axis=1)
 
-            BirchModel.partial_fit(reduced)
-            Birch_labels=BirchModel.predict(reduced) 
+            BirchModel.partial_fit(processed)
+            Birch_labels=BirchModel.predict(processed) 
             Birch_labels = pd.DataFrame(Birch_labels, columns = ['birch'])
             df_concat = pd.concat([df_concat, Birch_labels], axis=1)
             #print(df_concat.dtypes)

@@ -21,7 +21,7 @@ print(df)
 pd_df = df[cont]
 data_norm = pd.DataFrame( sc.transform(pd_df) , columns=cont)
 reduced = pca.transform( data_norm )
-print(reduced)   
+processed =  pd.DataFrame(data = reduced, columns=[f"P{col + 1}" for col in range(reduced.shape[1])])    
 
 from sklearn.cluster import KMeans
 cs = []
@@ -38,7 +38,7 @@ plt.show()
 
 
 model = Birch(branching_factor = 50, n_clusters = 4, threshold = 1.5)
-model.fit(reduced)
+model.fit(processed)
 
 
 pickle.dump(model, open('BirchModel.pkl', 'wb'))

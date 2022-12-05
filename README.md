@@ -4,7 +4,6 @@ Oussama Boujarfe HTERUJ
 
 Stream Mining Performed Tasks:
     DenStream Algorithm implementation
-    ClusTream Algorithm implementation (Not Completed)
     Pipeline Of streaming data
 Open Source Technologies Performed Tasks:
     Created a dashboard

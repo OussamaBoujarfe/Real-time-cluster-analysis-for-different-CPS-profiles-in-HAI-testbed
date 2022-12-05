@@ -12,7 +12,7 @@ INFLUX_TOKEN = "EAgglX4LdeS050CfN-co5RH64szpRLfIWLsJCbnZXV4IfHDo335Dt7p5_U7hVsMv
 ORG = "primary"
 BUCKET = "hai"
 #INFLUX_TOKEN =  'Vp7vp5ddGYs9vh4A4NVM6N7MmJvNGN79tODBCCPTxx_DAe7Xty8Vmi7kh-unIZ4QKbd3o7r2bUNTcj0OaSeyWg=='
-
+#_vueR6p82n7khVlskwa91RB_mhU5Ftte71K0M0-Ifm6gZjheEukfAIbHJXKl_brh5YvP3Sx1sjtCva6Oq2Z7dA==
 
 class InfluxDBWriter:
     def __init__(self):
@@ -22,7 +22,8 @@ class InfluxDBWriter:
         self.bucket = BUCKET
         self.client = InfluxDBClient(url=self.url, token=self.token, org=self.org)
         self.write_api = self.client.write_api()
-    
+        self.delete_api = self.client.delete_api()
+
 
     def saveToInfluxDB(self, df):
         try:
@@ -33,4 +34,8 @@ class InfluxDBWriter:
         except Exception as ex:
             print(f"[x] Error {str(ex)}")
 
-        
+    def flushInfluxDB(self):
+        start = "1970-01-01T00:00:00Z"
+        stop = "2022-12-05T08:00:00Z"
+        self.delete_api.delete(start, stop, '_measurement="attack"', bucket=self.bucket, org=self.org)
+        print("Old data flushed")

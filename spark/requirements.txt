@@ -3,3 +3,7 @@ pyspark
 numpy
 pandas
 influxdb-client
+river
+combo
+pysad
+PyNomaly

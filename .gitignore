@@ -1,6 +1,5 @@
 
 *.csv
-*.csv
 spark/.local/
 spark/.ivy2/
 spark/.local/
@@ -9,3 +8,5 @@ spark/.ipynb_checkpoints/
 spark/.jupyter/
 spark/.cache/
 spark/__pycache__/
+spark/.bash_history
+spark/.config/

@@ -4,7 +4,7 @@ import pandas as pd
 
 class STREAMKmeans:
     def __init__(self):
-        self.streamkmeans_model = pickle.load(open('./models/streamkmeans.pickle', 'rb')) 
+        self.streamkmeans_model = pickle.load(open('./streamkmeans.pickle', 'rb')) 
     
     def model(self, df):
         streamkmeans_labels=[]

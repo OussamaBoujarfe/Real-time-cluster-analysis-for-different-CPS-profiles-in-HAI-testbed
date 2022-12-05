@@ -27,21 +27,6 @@ cont=['P1_B2004', 'P1_B2016', 'P1_B3004', 'P1_B3005', 'P1_B4002', 'P1_B4005', 'P
 LOCAL_PATH = './data/train_0.csv'
 df = pd.read_csv(LOCAL_PATH,delimiter=';')
 pd_df = df[cont]
-"""
-sc = StandardScaler()
-sc.fit(pd_df) 
-
-data_norm = pd.DataFrame( sc.transform(pd_df))
-data_norm.columns = pd_df.columns
-
-pca = PCA(n_components = 2)
-pca.fit(pd_df)
-reduced = pca.transform(pd_df)
-principal_components = pd.DataFrame(data = reduced, columns=[f"P{col + 1}" for col in range(reduced.shape[1])])
-
-"""
-
-
 
 
 data_norm = pd.DataFrame( sc.transform(pd_df) , columns=cont)
@@ -55,10 +40,6 @@ principal_components =  pd.DataFrame(data = reduced, columns=[f"P{col + 1}" for 
 
 
 streamkmeans_1 = cluster.STREAMKMeans(chunk_size=390, n_clusters=4, halflife=0.5, sigma=2.5, seed=0)
-streamkmeans_2 = cluster.STREAMKMeans(chunk_size=20, n_clusters=3, halflife=0.5, sigma=2.5, seed=0)
-streamkmeans_3 = cluster.STREAMKMeans(chunk_size=300, n_clusters=10, halflife=1.5, sigma=2.5, seed=0)
-streamkmeans_4 = cluster.STREAMKMeans(chunk_size=30, n_clusters=5, halflife=1.5, sigma=1.5, seed=0)
-streamkmeans_5 = cluster.STREAMKMeans(chunk_size=3000, n_clusters=3, halflife=1.5, sigma=1.3, seed=0)
 
 tim= time.time()
 
@@ -67,63 +48,15 @@ for x, _ in stream.iter_pandas(principal_components):
     streamkmeans_1 = streamkmeans_1.learn_one(x)
     labels.append(streamkmeans_1.predict_one(x))
 print(pd.DataFrame(labels).value_counts())
-    
-    #streamkmeans_2 = streamkmeans_2.learn_one(x)
-    #streamkmeans_3 = streamkmeans_3.learn_one(x)
-    #streamkmeans_4 = streamkmeans_4.learn_one(x)
-    #streamkmeans_5 = streamkmeans_5.learn_one(x)
 
 tim2= time.time()
 
 print(tim2-tim)
-"""   
-LOCAL_PATH = './data/test2.csv'
-df = pd.read_csv(LOCAL_PATH,delimiter=';')
-pd_df = df[cont]
-data_norm = pd.DataFrame( sc.transform(pd_df) , columns=cont)
-# PCA
-reduced = pca.transform( data_norm )
-principal_components2 =  pd.DataFrame(data = reduced, columns=[f"P{col + 1}" for col in range(reduced.shape[1])])
 
-
-
-
-labels2=[]
-for x, _ in stream.iter_pandas(principal_components2):
-    labels2.append(streamkmeans_1.predict_one(x))
-print(pd.DataFrame(labels2).value_counts())
- 
-for x, _ in stream.iter_pandas(data_norm.iloc[43295:43305,:]):
-    print(streamkmeans_2.predict_one(x))
-for x, _ in stream.iter_pandas(data_norm.iloc[43295:43305,:]):
-
-    print(streamkmeans_3.predict_one(x))
-for x, _ in stream.iter_pandas(data_norm.iloc[43295:43305,:]):
-
-    print(streamkmeans_4.predict_one(x))
-for x, _ in stream.iter_pandas(data_norm.iloc[43295:43305,:]):
-
-    print(streamkmeans_5.predict_one(x))
+with open('./streamkmeans.pickle', 'wb') as f:
+    pickle.dump(streamkmeans_1, f)
 
     
-  
-
-plt.axes().set_aspect('equal','datalim')
-plt.scatter(principal_components['P1'], principal_components['P2'],color='blue',alpha=0.05)
-plt.scatter(principal_components2['P1'], principal_components2['P2'],color='red',alpha=0.05)
-plt.show()
-
-plt.axes().set_aspect('equal','box')
-for dot in principal_components.to_numpy():
-    plt.scatter(dot[0], dot[1],color='blue',alpha=0.7)
-
-
-for dot in principal_components2.to_numpy():
-    plt.scatter(dot[0], dot[1],color='red',alpha=0.7)    
-plt.show()
-
-"""  
-
 """
 def nltk_inertia(feature_matrix, centroid, labels):
     sum_ = []
@@ -189,5 +122,3 @@ plt.show()
 """
 
 
-with open('./models/streamkmeans.pickle', 'wb') as f:
-    pickle.dump(streamkmeans_1, f)

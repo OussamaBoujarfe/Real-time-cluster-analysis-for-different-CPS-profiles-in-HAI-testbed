@@ -108,6 +108,8 @@ if __name__=="__main__":
     Kmeans = Kmeans()
     exactstorm = ExactStorm()
   
+    BirchModel = pickle.load(open('./BIRCH/BirchModel.pkl', 'rb'))
+
     def func(batch_df, batch_id):
         #len(batch_df.collect())
         # Normalize
@@ -137,6 +139,11 @@ if __name__=="__main__":
             
             kmeans_labels = Kmeans.model(processed)
             df_concat = pd.concat([df_concat, kmeans_labels], axis=1)
+
+            BirchModel.partial_fit(reduced)
+            Birch_labels=BirchModel.predict(reduced) 
+            Birch_labels = pd.DataFrame(Birch_labels, columns = ['birch'])
+            df_concat = pd.concat([df_concat, Birch_labels], axis=1)
             #print(df_concat.dtypes)
             writer.saveToInfluxDB(df_concat)
         

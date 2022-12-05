@@ -36,6 +36,6 @@ class InfluxDBWriter:
 
     def flushInfluxDB(self):
         start = "1970-01-01T00:00:00Z"
-        stop = "2022-12-04T12:00:00Z"
+        stop = "2022-12-05T08:00:00Z"
         self.delete_api.delete(start, stop, '_measurement="attack"', bucket=self.bucket, org=self.org)
         print("Old data flushed")

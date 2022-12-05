@@ -6,3 +6,4 @@ influxdb-client
 river
 combo
 pysad
+PyNomaly

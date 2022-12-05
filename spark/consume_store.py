@@ -24,11 +24,7 @@ from river import stream
 
 import warnings
 warnings.filterwarnings('ignore')
-from Denstream.DenStream import DenStream
-from STREAMKmeans.STREAMKmeans import STREAMKmeans
-from iForest.iForestASD import iForestASD
-from Kmeans.Kmeans import Kmeans
-from ExactStorm.ExactStorm import ExactStorm
+
 
 if __name__=="__main__":
     os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0 pyspark-shell'
@@ -102,13 +98,10 @@ if __name__=="__main__":
     writer = InfluxDBWriter()
     writer.flushInfluxDB()
     
-    DenStream = DenStream() 
-    SKmeans = STREAMKmeans() 
-    iForest = iForestASD()
-    Kmeans = Kmeans()
-    exactstorm = ExactStorm()
+
   
-    BirchModel = pickle.load(open('./BIRCH/BirchModel.pkl', 'rb'))
+    MiniBatchKMeansModel = pickle.load(open('./MiniBatchKMeans/MiniBatchKMeans.pkl', 'rb'))
+
 
     def func(batch_df, batch_id):
         #len(batch_df.collect())
@@ -125,27 +118,11 @@ if __name__=="__main__":
             reduced = pca.transform( data_norm )
             processed =  pd.DataFrame(data = reduced, columns=[f"P{col + 1}" for col in range(reduced.shape[1])])    
             df_concat = pd.concat([df, processed], axis=1)
-
             
-            denstream_labels = DenStream.model(processed)
-            df_concat = pd.concat([df_concat, denstream_labels ], axis=1)
-
-            streamkmeans_labels = SKmeans.model(processed)
-            df_concat = pd.concat([df_concat, streamkmeans_labels], axis=1)
-            
-            iForest_labels = iForest.model(processed)
-            df_concat = pd.concat([df_concat, iForest_labels], axis=1)
-            
-            exactstorm_labels = exactstorm.model(processed)
-            df_concat = pd.concat([df_concat, exactstorm_labels], axis=1)
-            
-            kmeans_labels = Kmeans.model(processed)
-            df_concat = pd.concat([df_concat, kmeans_labels], axis=1)
-
-            BirchModel.partial_fit(processed)
-            Birch_labels=BirchModel.predict(processed) 
-            Birch_labels = pd.DataFrame(Birch_labels, columns = ['birch'])
-            df_concat = pd.concat([df_concat, Birch_labels], axis=1)
+            #MiniBatchKMeansModel.partial_fit(processed)
+            #MiniBatchKMeans_l=MiniBatchKMeansModel.predict(processed) 
+            #MiniBatchKMeans_labels = pd.DataFrame(MiniBatchKMeans_l, columns = ['MiniBatchKMeans'])
+            #df_concat = pd.concat([df_concat, MiniBatchKMeans_labels], axis=1)
             #print(df_concat.dtypes)
             writer.saveToInfluxDB(df_concat)
         

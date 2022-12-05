@@ -10,3 +10,12 @@ spark/.cache/
 spark/__pycache__/
 spark/.bash_history
 spark/.config/
+spark/ExactStorm/.ipynb_checkpoints/ExactStorm-checkpoint.py
+spark/ExactStorm/__pycache__/ExactStorm.cpython-310.pyc
+spark/iForest/.ipynb_checkpoints/iForestASD-checkpoint.py
+spark/iForest/__pycache__/iForestASD.cpython-310.pyc
+spark/Kmeans/.ipynb_checkpoints/Kmeans-checkpoint.py
+spark/Kmeans/__pycache__/Kmeans.cpython-310.pyc
+spark/STREAMKmeans/.ipynb_checkpoints/STREAMKmeans-checkpoint.py
+spark/STREAMKmeans/.ipynb_checkpoints/streamKmeans_train-checkpoint.py
+spark/STREAMKmeans/__pycache__/STREAMKmeans.cpython-310.pyc

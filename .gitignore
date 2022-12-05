@@ -19,3 +19,4 @@ spark/Kmeans/__pycache__/Kmeans.cpython-310.pyc
 spark/STREAMKmeans/.ipynb_checkpoints/STREAMKmeans-checkpoint.py
 spark/STREAMKmeans/.ipynb_checkpoints/streamKmeans_train-checkpoint.py
 spark/STREAMKmeans/__pycache__/STREAMKmeans.cpython-310.pyc
+*.pyc

@@ -28,21 +28,6 @@ services:
     networks:
       - hai-network
           
-            # Jupyter Environment with PySpark
-  pyspark:
-    image: pyspark
-    build: ./spark
-    container_name: pyspark
-    user: 1000:1000
-    ports:
-      - 8888:8888
-    volumes:
-       - ./spark:/home/jovyan
-    #  - ./data:/data
-    #  - ./models:/models
-    # - ./transformers:/transformers
-    networks:
-      - hai-network
 
   # Framework for data visualization
   grafana:
@@ -79,7 +64,22 @@ services:
       - hai-network
 
 
- 
+             # Jupyter Environment with PySpark
+  pyspark:
+    image: pyspark
+    build: ./spark
+    container_name: pyspark
+    user: 1000:1000
+    ports:
+      - 8888:8888
+    volumes:
+       - ./spark:/home/jovyan
+    depends_on:
+      - influxdb
+      - producer
+    networks:
+      - hai-network
+
   # Python Environement running a KafkaProducer programm
   producer:      
     image: producer

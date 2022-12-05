@@ -4,7 +4,7 @@ import pandas as pd
 
 class DenStream:
     def __init__(self):
-        self.denstream_model = pickle.load(open('denstream.pkl', 'rb')) 
+        self.denstream_model = pickle.load(open('./Denstream/denstream.pkl', 'rb')) 
     
     def model(self, df):
         denstream_labels=[]

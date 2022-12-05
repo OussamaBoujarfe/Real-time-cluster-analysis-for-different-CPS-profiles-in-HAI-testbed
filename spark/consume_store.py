@@ -100,7 +100,7 @@ if __name__=="__main__":
 'P1_FT02', 'P1_FT02Z', 'P1_FT03', 'P1_FT03Z', 'P1_LCV01D', 'P1_LCV01Z', 'P1_LIT01', 'P1_PCV01D', 'P1_PCV01Z', 'P1_PCV02Z', 'P1_PIT01', 'P1_PIT02', 'P1_TIT01', 'P1_TIT02', 'P2_24Vdc', 'P2_SIT01', 'P2_VT01e', 'P2_VXT02', 'P2_VXT03', 'P2_VYT02', 'P2_VYT03', 'P3_LCP01D', 'P3_LCV01D', 'P3_LT01', 'P4_HT_FD', 'P4_HT_LD', 'P4_HT_PO', 'P4_LD', 'P4_ST_FD', 'P4_ST_LD', 'P4_ST_PO', 'P4_ST_PS', 'P4_ST_PT01', 'P4_ST_TT01']    
     
     writer = InfluxDBWriter()
-    writer.flushInfluxDB()
+    #writer.flushInfluxDB()
     
     DenStream = DenStream() 
     SKmeans = STREAMKmeans() 
@@ -109,7 +109,7 @@ if __name__=="__main__":
     exactstorm = ExactStorm()
   
     BirchModel = pickle.load(open('./BIRCH/BirchModel.pkl', 'rb'))
-    MiniBatchKMeansModel = pickle.load(open('./MiniBatchKMeans/MiniBatchKMeans.pkl', 'rb'))
+    MiniBatchKMeansModel = pickle.load(open('./MiniBatchKmeans/MiniBatchKMeans.pkl', 'rb'))
 
     def func(batch_df, batch_id):
         #len(batch_df.collect())
@@ -165,7 +165,7 @@ if __name__=="__main__":
     query = inputStream \
         .writeStream \
         .foreachBatch(func) \
-        .trigger(processingTime = "10 seconds")\
+        .trigger(processingTime = "20 seconds")\
         .start()
         #.format("console") \
         

@@ -27,6 +27,7 @@ Stream Mining Performed Tasks:
 
 Open Source Technologies Performed Tasks:
     Created a dashboard
+    Connect Grafana to influxDB
 
 -----------------------------------------------
 Donia Gharbi QNGHNC
@@ -37,6 +38,7 @@ Stream Mining Performed Tasks:
 
 Open Source Technologies Performed Tasks:
     Created a dashboard
+    Connect Grafana to influxDB
 
 
 

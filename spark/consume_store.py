@@ -24,7 +24,7 @@ from river import stream
 
 import warnings
 warnings.filterwarnings('ignore')
-
+from Denstream.DenStream import DenStream
 from STREAMKmeans.STREAMKmeans import STREAMKmeans
 from iForest.iForestASD import iForestASD
 from Kmeans.Kmeans import Kmeans
@@ -102,7 +102,7 @@ if __name__=="__main__":
     writer = InfluxDBWriter()
     writer.flushInfluxDB()
     
-    
+    DenStream = DenStream() 
     SKmeans = STREAMKmeans() 
     iForest = iForestASD()
     Kmeans = Kmeans()
@@ -127,7 +127,9 @@ if __name__=="__main__":
             df_concat = pd.concat([df, processed], axis=1)
 
             
-            
+            denstream_labels = DenStream.model(processed)
+            df_concat = pd.concat([df_concat, denstream_labels ], axis=1)
+
             streamkmeans_labels = SKmeans.model(processed)
             df_concat = pd.concat([df_concat, streamkmeans_labels], axis=1)
             

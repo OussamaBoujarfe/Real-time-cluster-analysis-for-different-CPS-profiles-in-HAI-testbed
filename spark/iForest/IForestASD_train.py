@@ -33,7 +33,7 @@ principal_components =  pd.DataFrame(data = reduced, columns=[f"P{col + 1}" for 
 
 
 tim= time.time()
-iForest = IForestASD(window_size=512)
+iForest = IForestASD(window_size=256)
 
 iForest = iForest.fit(principal_components.to_numpy())
 
@@ -41,5 +41,6 @@ tim2= time.time()
 
 print(tim2-tim)
 
-with open('./models/iforestasd.pickle', 'wb') as f:
+
+with open('./iforestasd_256.pickle', 'wb') as f:
     pickle.dump(iForest, f)

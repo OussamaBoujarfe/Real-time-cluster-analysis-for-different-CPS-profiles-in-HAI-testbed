@@ -8,7 +8,7 @@ import pickle
 
 class iForestASD:
     def __init__(self):
-        self.iforest_model = pickle.load(open('./iforestasd_2048.pickle', 'rb')) 
+        self.iforest_model = pickle.load(open('./iForest/iforestasd_2048.pickle', 'rb')) 
     
     def model(self, df):
         iforestasd_labels = self.iforest_model.fit_score(df.to_numpy())

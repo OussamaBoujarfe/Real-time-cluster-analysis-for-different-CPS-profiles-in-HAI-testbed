@@ -4,7 +4,7 @@ import pandas as pd
 
 class Kmeans:
     def __init__(self):
-        self.kmeans_model = pickle.load(open('./kmeans.pickle', 'rb')) 
+        self.kmeans_model = pickle.load(open('./Kmeans/kmeans.pickle', 'rb')) 
     
     def model(self, df):
         kmeans_labels=[]

@@ -8,7 +8,7 @@ import pickle
 
 class ExactStorm:
     def __init__(self):
-        self.exactstorm_model = pickle.load(open('./exactstorm.pickle', 'rb')) 
+        self.exactstorm_model = pickle.load(open('./ExactStorm/exactstorm.pickle', 'rb')) 
     
     def model(self, df):
         exactstorm_labels = self.exactstorm_model.fit_score(df.to_numpy())

@@ -4,7 +4,6 @@ Oussama Boujarfe HTERUJ
 
 Stream Mining Performed Tasks:
     DenStream Algorithm implementation
-    ClusTream Algorithm implementation (Not Completed)
     Pipeline Of streaming data
 Open Source Technologies Performed Tasks:
     Created a dashboard
@@ -28,6 +27,7 @@ Stream Mining Performed Tasks:
 
 Open Source Technologies Performed Tasks:
     Created a dashboard
+    Connect Grafana to influxDB
 
 -----------------------------------------------
 Donia Gharbi QNGHNC
@@ -38,6 +38,7 @@ Stream Mining Performed Tasks:
 
 Open Source Technologies Performed Tasks:
     Created a dashboard
+    Connect Grafana to influxDB
 
 
 

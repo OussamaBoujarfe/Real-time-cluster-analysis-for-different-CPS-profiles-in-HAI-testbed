@@ -109,6 +109,7 @@ if __name__=="__main__":
     exactstorm = ExactStorm()
   
     BirchModel = pickle.load(open('./BIRCH/BirchModel.pkl', 'rb'))
+    MiniBatchKMeansModel = pickle.load(open('./MiniBatchKMeans/MiniBatchKMeans.pkl', 'rb'))
 
     def func(batch_df, batch_id):
         #len(batch_df.collect())
@@ -146,7 +147,12 @@ if __name__=="__main__":
             Birch_labels=BirchModel.predict(processed) 
             Birch_labels = pd.DataFrame(Birch_labels, columns = ['birch'])
             df_concat = pd.concat([df_concat, Birch_labels], axis=1)
-            #print(df_concat.dtypes)
+
+            MiniBatchKMeansModel.partial_fit(processed)
+            MiniBatchKMeans_labels=MiniBatchKMeansModel.predict(processed) 
+            MiniBatchKMeans_labels = pd.DataFrame(MiniBatchKMeans_labels, columns = ['birch'])
+            df_concat = pd.concat([df_concat, MiniBatchKMeans_labels], axis=1)
+
             writer.saveToInfluxDB(df_concat)
         
         else:

@@ -3,29 +3,39 @@
 Oussama Boujarfe HTERUJ
 
 Stream Mining Performed Tasks:
-
-Open Source Technologies Tasks:
-
------------------------------------------------
-Your Name
-
-Stream Mining Performed Tasks:
+    DenStream Algorithm implementation
 
 Open Source Technologies Performed Tasks:
+    Created a dashboard
 
 -----------------------------------------------
-Your Name
+Stanić Dejana CW223N
 
-Stream Mining Performed Tasks:
+Stream Mining Performed Tasks: 
+    Incremental Kmeans implementation 
+    STREAMKmeans Algorithm implementation
 
-Open Source Technologies Tasks:
+Open Source Technologies Performed Tasks:
+    Created a dashboard
 
 -----------------------------------------------
-Your Name
+Fenzari Feriel KFRM3T
 
 Stream Mining Performed Tasks:
+     MiniBatchKmeans Algorithm implementation
 
-Open Source Technologies Tasks:
+Open Source Technologies Performed Tasks:
+    Created a dashboard
+
+-----------------------------------------------
+Donia Gharbi QNGHNC
+
+Stream Mining Performed Tasks:
+    Birch Algorithm implementation
+    Simple Sketch
+
+Open Source Technologies Performed Tasks:
+    Created a dashboard
 
 
 

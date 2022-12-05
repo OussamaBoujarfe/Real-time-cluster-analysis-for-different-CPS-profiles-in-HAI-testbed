@@ -52,30 +52,4 @@ for x, _ in stream.iter_pandas(principal_components ):
     
     l.append(denstream.predict_one(x))
 print(pd.DataFrame(l).value_counts())                      
-
-"""
-streamkmeans_1 = cluster.STREAMKMeans(chunk_size=390, n_clusters=4, halflife=0.5, sigma=2.5, seed=0)
-streamkmeans_2 = cluster.STREAMKMeans(chunk_size=20, n_clusters=3, halflife=0.5, sigma=2.5, seed=0)
-streamkmeans_3 = cluster.STREAMKMeans(chunk_size=300, n_clusters=10, halflife=1.5, sigma=2.5, seed=0)
-streamkmeans_4 = cluster.STREAMKMeans(chunk_size=30, n_clusters=5, halflife=1.5, sigma=1.5, seed=0)
-streamkmeans_5 = cluster.STREAMKMeans(chunk_size=3000, n_clusters=3, halflife=1.5, sigma=1.3, seed=0)
-
-tim= time.time()
-
-labels=[]
-for x, _ in stream.iter_pandas(principal_components):
-    streamkmeans_1 = streamkmeans_1.learn_one(x)
-    labels.append(streamkmeans_1.predict_one(x))
-print(pd.DataFrame(labels).value_counts())
-    
-    #streamkmeans_2 = streamkmeans_2.learn_one(x)
-    #streamkmeans_3 = streamkmeans_3.learn_one(x)
-    #streamkmeans_4 = streamkmeans_4.learn_one(x)
-    #streamkmeans_5 = streamkmeans_5.learn_one(x)
-
-tim2= time.time()
-
-print(tim2-tim)
-
-with open('./models/streamkmeans.pickle', 'wb') as f:
-    pickle.dump(streamkmeans_1, f)"""
+pickle.dump(denstream, open('denstream.pkl', 'wb'))

@@ -25,8 +25,8 @@ from river import stream
 import warnings
 warnings.filterwarnings('ignore')
 
-from STREAMKmeans import STREAMKmeans
-from iForestASD import iForestASD
+from DenStream import DenStream
+
 
 if __name__=="__main__":
     os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0 pyspark-shell'
@@ -104,8 +104,7 @@ if __name__=="__main__":
     
     writer = InfluxDBWriter()
     
-    SKmeans = STREAMKmeans() 
-    iForest = iForestASD()
+    DenStream = DenStream() 
     
     
     def func(batch_df, batch_id):
@@ -124,11 +123,10 @@ if __name__=="__main__":
 
             
             
-            streamkmeans_labels = SKmeans.model(processed)
-            df_concat = pd.concat([df_concat, streamkmeans_labels], axis=1)
+            dstr_labels = DenStream.model(processed)
+            df_concat = pd.concat([df_concat, dstr_labels], axis=1)
             
-            iForest_labels = iForest.model(processed)
-            df_concat = pd.concat([df_concat, iForest_labels], axis=1)
+           
             
             writer.saveToInfluxDB(df_concat)
         
@@ -163,8 +161,7 @@ from river import stream
 import warnings
 warnings.filterwarnings('ignore')
 
-from STREAMKmeans import STREAMKmeans
-from iForestASD import iForestASD
+from DenStream import DenStream
 
 if __name__=="__main__":
     os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.0 pyspark-shell'
@@ -242,8 +239,7 @@ if __name__=="__main__":
     
     writer = InfluxDBWriter()
     writer.flushInfluxDB()
-    SKmeans = STREAMKmeans() 
-    iForest = iForestASD()
+    DenStream = DenStream() 
     
     
     def func(batch_df, batch_id):
@@ -264,12 +260,10 @@ if __name__=="__main__":
 
             
             
-            streamkmeans_labels = SKmeans.model(processed)
-            df_concat = pd.concat([df_concat, streamkmeans_labels], axis=1)
+            dstr_labels = DenStream.model(processed)
+            df_concat = pd.concat([df_concat, dstr_labels], axis=1)
             
-            iForest_labels = iForest.model(processed)
-            df_concat = pd.concat([df_concat, iForest_labels], axis=1)
-            #print(df_concat.dtypes)
+           
             writer.saveToInfluxDB(df_concat)
         
         else:
